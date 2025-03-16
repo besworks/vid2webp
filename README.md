@@ -1,6 +1,6 @@
 # vid2webp
 
-Easily cut clips from video files into animated webp format.
+Easily clip videos into animated webp format using ffmpeg.
 
 ## Usage
 
