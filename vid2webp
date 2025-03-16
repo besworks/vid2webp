@@ -46,7 +46,7 @@ fi
 
 crop=$(ffmpeg -ss 10 -i "$1" -vframes 10 -vf cropdetect -f null -  2>&1 | grep -m 1 -oP 'crop=\K[0-9:]+')
 
-fps=${FPS:-1}
+fps=${FPS:-20}
 scale=${SCALE:-1}
 
 width=$(echo "$crop" | cut -d':' -f1)
