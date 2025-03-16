@@ -1,0 +1,65 @@
+#!/bin/bash
+
+if [ -z "$1" ]; then
+  echo "missing input file parameter"
+  exit 1
+fi
+
+if [ ! -f "$1" ]; then
+  echo "$1 not found"
+  exit 1
+fi
+
+function get_next_filename() {
+    local base="${1%.*}"
+    local ext="${1##*.}"
+    local newname="$1"
+    local counter=2
+
+    while [[ -f "$newname" ]]; do
+        newname="${base}-${counter}.${ext}"
+        ((counter++))
+    done
+
+    echo "$newname"
+}
+
+if [ ! -z "$4" ]; then
+  out="$4.webp"
+else
+  dir=$(dirname "$1")
+  out=$(basename "$1")
+  out="$dir/${out%.*}.webp"
+  out=$(get_next_filename "$out") 
+fi
+
+start=""
+end=""
+
+if [ ! -z "$2" ]; then
+  start="-ss $2 "
+fi
+
+if [ ! -z "$3" ]; then
+  end="-to $3 "
+fi
+
+crop=$(ffmpeg -ss 10 -i "$1" -vframes 10 -vf cropdetect -f null -  2>&1 | grep -m 1 -oP 'crop=\K[0-9:]+')
+
+fps=${FPS:-1}
+scale=${SCALE:-1}
+
+width=$(echo "$crop" | cut -d':' -f1)
+width=$(echo "$width * $scale" | bc)
+
+height=$(echo "$crop" | cut -d':' -f2)
+height=$(echo "$height * $scale" | bc)
+
+
+if [ "$height" -gt "$width" ]; then
+  scale="-2:$height"
+else
+  scale="$width:-2"
+fi
+
+ffmpeg -i "$1" $start$end-loop 1 -an -vf crop="$crop",scale="$scale",fps=fps="$fps" "$out"
