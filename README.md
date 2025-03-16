@@ -68,5 +68,5 @@ $ SCALE=1.5 vid2webp video.mp4 51 60 larger # outputs as <input_path>/larger.web
 $ SCALE=0.5 vid2webp video.mp4 51 60 smaller #  output as <input_path>/smaller.webp
 $ SCALE=1 vid2webp video.mp4 51 60 # reset scale and continue sequential output
 $ vid2webp video.mp4 65.2 75.6  # use millisecond prescion if desired
-$ vid2webp video.mp4 "00:00:05" "00:00:15" # or full timestamp notation
+$ vid2webp video.mp4 "00:07:05" "00:07:25" # or full timestamp notation
 ```
