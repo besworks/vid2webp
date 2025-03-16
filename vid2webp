@@ -44,10 +44,11 @@ if [ ! -z "$3" ]; then
   end="-to $3 "
 fi
 
-crop=$(ffmpeg -ss 10 -i "$1" -vframes 10 -vf cropdetect -f null -  2>&1 | grep -m 1 -oP 'crop=\K[0-9:]+')
-
-fps=${FPS:-20}
+sample=${SAMPLE:-10}
 scale=${SCALE:-1}
+fps=${FPS:-20}
+
+crop=$(ffmpeg -ss "$sample" -i "$1" -vframes 1 -vf cropdetect -f null -  2>&1 | grep -m 1 -oP 'crop=\K[0-9:]+')
 
 width=$(echo "$crop" | cut -d':' -f1)
 width=$(echo "$width * $scale" | bc)
