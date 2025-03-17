@@ -58,14 +58,14 @@ $ FPS=30 vid2webp vidfile.mp4
 Any value set by ENV var persists until changed to make batch processing easier.
 
 ```bash
-$ FPS=30 SAMPLE=5 vid2webp video.mp4 0 10 # set framerate for batch and override initial sample position
-$ vid2webp video.mp4 10 20 # outputs to video.webp
-$ vid2webp video.mp4 20 30 # outputs to video-1.webp
-$ unset SAMPLE # revert to auto automatic crop detection
+$ FPS=30 SAMPLE=5 vid2webp video.mp4 0 10 # set framerate, override initial sample position
+$ vid2webp video.mp4 10 20 # outputs to video-1.webp
+$ vid2webp video.mp4 20 30 # outputs to video-2.webp
+$ unset SAMPLE # revert to automatic crop detection
 $ vid2webp video.mp4 30 40 # continue sequential output:
 $ SCALE=1.5 vid2webp video.mp4 40 50 larger # outputs as larger.webp
 $ SCALE=0.5 vid2webp video.mp4 40 50 smaller #  output as smaller.webp
-$ SCALE=1 vid2webp video.mp4 40 50 # reset scale and continue sequential
+$ SCALE=1 vid2webp video.mp4 40 50 # reset scale and continue sequential output
 $ vid2webp video.mp4 65.2 75.6  # use millisecond prescion if desired
 $ vid2webp video.mp4 "00:07:05" "00:07:25" # or full timestamp notation
 ```
