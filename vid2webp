@@ -14,7 +14,7 @@ function get_next_filename() {
     local base="${1%.*}"
     local ext="${1##*.}"
     local newname="$1"
-    local counter=2
+    local counter=1
 
     while [[ -f "$newname" ]]; do
         newname="${base}-${counter}.${ext}"
@@ -44,11 +44,22 @@ if [ ! -z "$3" ]; then
   end="-to $3 "
 fi
 
-sample=${SAMPLE:-10}
+if [ -z "$SAMPLE" ]; then
+  sample="$start"
+else
+  sample="-ss ${SAMPLE:-1}"
+fi
+
 scale=${SCALE:-1}
 fps=${FPS:-20}
+frames=${FRAMES:-10}
 
-crop=$(ffmpeg -ss "$sample" -i "$1" -vframes 1 -vf cropdetect -f null -  2>&1 | grep -m 1 -oP 'crop=\K[0-9:]+')
+crop=$(ffmpeg  $sample -i "$1" -vframes $frames -vf cropdetect -f null - 2>&1 | grep -m 1 -oP 'crop=\K[0-9:]+')
+
+if [ -z "$crop" ]; then
+  echo "cropdetect failed"
+  exit 1
+fi
 
 width=$(echo "$crop" | cut -d':' -f1)
 width=$(echo "$width * $scale" | bc)
@@ -56,6 +67,10 @@ width=$(echo "$width * $scale" | bc)
 height=$(echo "$crop" | cut -d':' -f2)
 height=$(echo "$height * $scale" | bc)
 
+if [ -z "$width" ] || [ -z "$height" ]; then
+  echo "scaling failed"
+  exit 1
+fi
 
 if [ "$height" -gt "$width" ]; then
   scale="-2:$height"
@@ -63,4 +78,5 @@ else
   scale="$width:-2"
 fi
 
-ffmpeg -i "$1" $start$end-loop 1 -an -vf crop="$crop",scale="$scale",fps=fps="$fps" "$out"
+# NOTE: fps=fps= is not a typo
+ffmpeg -i "$1" $start $end -loop 1 -an -vf crop="$crop",scale="$scale",fps=fps="$fps" "$out"
