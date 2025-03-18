@@ -1,7 +1,46 @@
 #!/bin/bash
 
 if [ -z "$1" ]; then
-  echo "missing input file parameter"
+  echo
+  echo "Clip videos into animated webp format."
+  echo 
+  echo "Usage: $(basename "$0") <input_file> [start_time] [end_time] [output_name]"
+  echo
+  echo "Parameters:"
+  echo "  input_file   - Source video file"
+  echo "  start_time   - Start time (optional, format: HH:MM:SS)"
+  echo "  end_time     - End time (optional, format: HH:MM:SS)"
+  echo "  output_name  - Output filename without extension (optional)"
+  echo
+  echo "Output will be saved as <input_file>{-1,-2,etc}.webp in the same directory."
+  echo
+  echo "Environment variables:"
+  echo "  SAMPLE  - Sample time for crop detection (default: start_time or 1 second mark)"
+  echo "  FRAMES  - Number of frames to analyze for crop detection (default: 10)"
+  echo "  SCALE   - Output scale factor (default: 1) applied to cropped area"
+  echo "  FPS     - Output framerate (default: 20)"
+  echo 
+  echo "Examples:"
+  echo "  $(basename "$0") video.mp4 05 10"
+  echo "  $(basename "$0") video.mp4 \"00:00:55\" \"00:01:12\""
+  echo "  SCALE=0.25 $(basename "$0") video.mp4 05 10 video-thumbnail"
+  echo
+  echo "Which Produces:"
+  echo "  video.webp"
+  echo "  video-1.webp"
+  echo "  video-thumbnail.webp"
+  echo
+  echo "ENV vars persist between runs, use unset to return to default."
+  echo "  SCALE=0.8 $(basename "$0") video.mp4 0 10"
+  echo "  $(basename "$0") video.mp4 10 20"
+  echo "  SCALE=0.5 $(basename "$0") video.mp4 0 10"
+  echo "  $(basename "$0") video.mp4 10 20"
+  echo "  unset SCALE # resets to SCALE=1"
+  echo "  $(basename "$0") video.mp4"
+  echo
+  echo "If cropdetect fails, try overriding SAMPLE position or increasing FRAMES"
+  echo "  $ SAMPLE=5 FRAMES=20 $(basename "$0") video.mp4"
+  echo
   exit 1
 fi
 
