@@ -64,7 +64,7 @@ function get_next_filename() {
 }
 
 if [ ! -z "$4" ]; then
-  out="$4.webp"
+  out="${4%.webp}.webp"
 else
   dir=$(dirname "$1")
   out=$(basename "$1")
